@@ -1,0 +1,5 @@
+<apex:page action="{!attachPDF}" extensions="attachPDFToOpportunity" standardController="Opportunity">
+
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:detail inlineEdit="true" relatedList="true"></apex:detail>
+</apex:page>

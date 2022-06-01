@@ -1,0 +1,211 @@
+<apex:page renderAs="PDF" controller="InvoicePdfController" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" showHeader="false">
+   <!-- {!$CurrentPage.parameters.id} -->
+   <!-- &id=0065j00000a32YHAAY -->
+   <html>
+      <head>
+         <style>
+            .header {
+            background-color: #dbd9d7;
+            height:300px;
+            }
+            h1 {
+            background-color: #ed8a09;
+            }
+            .logo{
+            width:50px;
+            }
+            .container {
+            background-color: #dbd9d7;
+            }
+            .owner{
+            margin-left:40px;
+            }
+            .org-info{
+            float:left;
+            }
+            .org-info-list{
+            list-style: none;
+            }
+            .invoice-info{
+            float: right;
+            margin-right: 30px;	
+            }
+            .bill{}
+            .bill-list {
+            list-style:none;
+            }
+            .table-fill {
+            background: white;
+            border-radius:3px;
+            border-collapse: collapse;
+            height: 320px;
+            margin: auto;
+            max-width: 600px;
+            padding:5px;
+            width: 100%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            th {
+            background:#ed8a09;
+            border-bottom:4px solid #000000;
+            border-right: 1px solid #000000;
+            font-size:18px;
+            color: #000000;
+            padding:24px;
+            text-align:left;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            vertical-align:middle;
+            }
+            th:first-child {
+            border-top-left-radius:3px;
+            }
+            th:last-child {
+            border-top-right-radius:3px;
+            border-right:none;
+            }
+            tr {
+            border-top: 1px solid #000000;
+            border-bottom-: 1px solid #000000;
+            color:#666B85;
+            font-size:16px;
+            font-weight:normal;
+            text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+            }
+            tr:first-child {
+            border-top:none;
+            }
+            tr:last-child {
+            border-bottom:none;
+            }
+            tr:nth-child(odd) td {
+            background:#EBEBEB;
+            }
+            tr:last-child td:first-child {
+            border-bottom-left-radius:3px;
+            }
+            tr:last-child td:last-child {
+            border-bottom-right-radius:3px;
+            }
+            td {
+            background:#dbd9d7;
+            padding:20px;
+            text-align:left;
+            vertical-align:middle;
+            font-weight:300;
+            font-size:18px;
+            text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+            border-right: 1px solid #C1C3D1;
+            color: #000000;
+            }
+            td:last-child {
+            border-right: 0px;
+            }
+            th.text-left {
+            text-align: left;
+            }
+            th.text-center {
+            text-align: center;
+            }
+            th.text-right {
+            text-align: right;
+            }
+            td.text-left {
+            text-align: left;
+            }
+            td.text-center {
+            text-align: center;
+            }
+            td.text-right {
+            text-align: right;
+            }
+            .balance {
+            background-color: #d96c64;
+            }
+            .footer {
+            background-color:#ed8a09;
+            text-align:center;
+            }
+         </style>
+      </head>
+      <body>
+         <div class="header">
+            <h1>
+               {!myOrg.Name}
+            </h1>
+            <div class="container">
+               <div class="org-info">
+                  <ul class="org-info-list">
+                     <li>        <img class="logo" src="https://successcraft56-dev-ed--c.visualforce.com/resource/1653859174000/Logo?"/></li>
+                     <li>{!myOrg.Country}</li>
+                     <li>{!myOrg.State}</li>
+                     <li>{!myOrg.City}</li>
+                     <li>{!myOrg.Street}</li>
+                     <li>{!myOrg.PostalCode}</li>
+                  </ul>
+                  <p class="owner">
+                     Owner: {!oppOwner.Name}
+                  </p>
+               </div>
+               <div class="invoice-info">
+                  <h2>
+                     INVOICE
+                  </h2>
+                  <p>
+                     Date: {!DAY(TODAY())}.{!MONTH(TODAY())}.{!YEAR(TODAY())}
+                  </p>
+                  <p>
+                     Invoice: {!currentRecord.Invoice_Number__c}
+                  </p>
+               </div>
+            </div>
+         </div>
+         <div class="bill">
+            <h2>
+               BILL TO
+            </h2>
+            <ul class="bill-list">
+               <li>Name: {!oppContact.Name}</li>
+               <li>Company: {!oppContactCompany.Name}</li>
+               <li>Phone: {!oppContact.Phone}</li>
+               <li>Email: {!oppContact.Email}</li>
+            </ul>
+         </div>
+         <div class="table">
+            <table class="table-fill">
+               <thead>
+                  <tr>
+                     <th class="text-left">PRODUCT NAME</th>
+                     <th class="text-left">QTY</th>
+                     <th class="text-left">UNIT PRICE</th>
+                     <th class="text-left">TOTAL</th>
+                  </tr>
+               </thead>
+               <tbody class="table-hover">
+                  <apex:repeat value="{!products}" var="p">
+                     <tr>
+                        <td class="text-left">{!substitute(p.Name, currentRecord.Name, "")}</td>
+                        <td class="text-left">{!p.Quantity}</td>
+                        <td class="text-left">{!p.ListPrice}</td>
+                        <td class="text-left">{!p.TotalPrice}</td>
+                     </tr>
+                  </apex:repeat>
+                  <tr>
+                     <td class="text-left"></td>
+                     <td class="text-left"></td>
+                     <td class="text-left">Balance</td>
+                     <td class="text-left balance">{!balance}</td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="footer" style="margin-top: {!margin}">
+               <h2>
+                  {!myOrg.Name}
+               </h2>
+            </div>
+         </div>
+         <script>
+            let tableHeight = document.querySelector('.table').clientHeight;
+         </script>
+      </body>
+   </html>
+</apex:page>
