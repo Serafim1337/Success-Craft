@@ -7,19 +7,38 @@ export default class ReportLwc extends LightningElement {
 
   @wire(getAccounts) accounts
 
-  handleSumAmount(event) {
-    // let target = event.target;
+  renderedCallback() {
+    let oppsBlocks = this.template.querySelectorAll('.opps-block');
 
-    // let parent = target.parentElement;
+    for(let ob of oppsBlocks) {
+      if(ob.children.length > 0) {
 
-    // let amounts = parent.querySelectorAll('.amount');
+        let amountElements = ob.children;
+        let sum = 0;
 
-    // let sum = 0;
+        for(let elem of amountElements) {
+          
+          let amounts = elem.textContent.substring(elem.textContent.indexOf('=')+1);
+          sum+= parseInt(amounts);
 
-    // for(let a of amounts) {
-    //   sum+= parseInt(a.textContent());
-    // }
+          }
 
-    // target.textContent = sum;
+          console.log(sum);
+
+          ob.lastElementChild.textContent = 'Sum= ' + sum;
+
+        }
+
+      }
+
+    }
+
+    linksHandler(event) {
+      let id = event.target.dataset.targetId;
+      let url = 'https://successcraft56-dev-ed.lightning.force.com/lightning/r/Opportunity/'+ id +'/view';
+      window.open(url, '_blank')
+    }
+
   }
-}
+
+  

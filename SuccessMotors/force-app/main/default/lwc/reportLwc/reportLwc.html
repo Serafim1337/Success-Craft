@@ -11,21 +11,23 @@
 <template if:false={view}>
 
   <lightning-card>
- 
+    
+    <h1 style="font-size: 24px; font-weight:500; text-align:center">Accounts with Closed Opportunities</h1>
 
 <lightning-accordion>
   <template for:each={accounts.data} for:item="acc">
       <lightning-accordion-section key={acc.Id} label={acc.Name}>
+        
         <h2 style="font-size: 18px; font-weight:700;">Closed Opportunities:</h2>
-
+        <div class="opps-block">
        <template for:each={acc.Opportunities} for:item="p">
         
-         <p key={p.Id}>{p.Name} = <span class="amount">{p.Amount}</span></p>
+         <a key={p.Id} style="display: block;"  data-target-id={p.Id} class="opp-link" onclick={linksHandler}>{p.Name} = <span class="amount">{p.Amount}</span></a>
 
        </template>
-
-       <p onload={handleSumAmount} class="sum">Sum</p>
-
+      
+       <p class="sum" style="font-weight: 700;">Sum=0</p>
+      </div>
       </lightning-accordion-section>
   </template>
 </lightning-accordion>

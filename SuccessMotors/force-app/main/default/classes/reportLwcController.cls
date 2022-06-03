@@ -11,9 +11,9 @@ public with sharing class reportLwcController {
         WITH SECURITY_ENFORCED];
 
 
-        // WHERE Id IN (SELECT AccountId 
-        // FROM Opportunity
-        // WHERE IsWon=TRUE AND
-        // IsClosed = TRUE)
+        // return [SELECT Name, (SELECT SUM(Amount) FROM Opportunities WHERE IsClosed=TRUE AND IsWon=TRUE)
+        // FROM Account
+        // WITH SECURITY_ENFORCED
+        // ];
     }
 }
