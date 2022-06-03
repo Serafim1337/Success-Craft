@@ -1,9 +1,13 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
+	
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { CloseActionScreenEvent } from 'lightning/actions';
 
 import sendEmailToController from '@salesforce/apex/ControllerLwcExample.sendEmailToController';
 import getTemplateData from '@salesforce/apex/ControllerLwcExample.getTemplateData';
 import getContactData from '@salesforce/apex/ControllerLwcExample.getContactData';
+import getAttachment from '@salesforce/apex/ControllerLwcExample.getAttachment';
 
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import { getSObjectValue } from '@salesforce/apex';
@@ -13,20 +17,16 @@ import TEMPLATE_SUBJECT from '@salesforce/schema/EmailTemplate.Subject';
 import TEMPLATE_BODY from '@salesforce/schema/EmailTemplate.Body';
 import CONTACT_NAME from '@salesforce/schema/Contact.Name';
 import CONTACT_EMAIL from '@salesforce/schema/Contact.Email';
+import ATTACHMENT_NAME from '@salesforce/schema/Attachment.Name';
 
 const fields = [INVOICE_NUMBER];
 
 
 export default class LwcExample extends NavigationMixin (LightningElement) {
-    subject = 'Test Email';
-    //body = 'Hello';
-    toSend = '7620226@gmail.com';
 
     @api recordId;
 
     @wire(getRecord, {recordId: '$recordId', fields}) currentOpp;
-
-    
 
     get invoiceNumber() {
         return getFieldValue(this.currentOpp.data, INVOICE_NUMBER);
@@ -35,13 +35,32 @@ export default class LwcExample extends NavigationMixin (LightningElement) {
     body="";
 
     sendEmailAfterEvent(){
-        const recordInput = {body: this.body == "" ? this.templateBody : this.body, toSend: this.contactEmail, subject: this.templateSubject} ; //You can send parameters
+        const recordInput = {body: this.body == "" ? this.templateBody : this.body, 
+        toSend: this.contactEmail, 
+        subject: this.templateSubject +this.invoiceNumber, 
+        fileName: this.invoiceNumber, 
+        oppId: this.recordId} ; 
         sendEmailToController(recordInput)
         .then( () => {
-            //If response is ok
-        }).catch( error => {
-            //If there is an error on response
+            const event = new ShowToastEvent({
+                title: 'Success',
+                message: 'Invoice '+ this.invoiceNumber + ' successfully sent to ' + this.contactEmail,
+                variant: 'success',
+                mode: 'dismissable',
+            });
+            this.dispatchEvent(event);
+            this.dispatchEvent(new CloseActionScreenEvent());
+
+        }).catch( () => {
+            const event = new ShowToastEvent({
+                title: 'Error occurred',
+                message: 'Invoice not sent, check contact role on existence',
+                variant: 'error',
+                mode: 'dismissable',
+            });
+            this.dispatchEvent(event);
         })
+
     }
 
     handleBodyChange(event) {
@@ -66,6 +85,12 @@ export default class LwcExample extends NavigationMixin (LightningElement) {
 
     get contactEmail() {
         return getSObjectValue(this.contact.data, CONTACT_EMAIL)
+    }
+
+    @wire(getAttachment, {oppId: '$recordId'}) attachment;
+
+    get attachmentName() {
+        return getSObjectValue(this.attachment.data, ATTACHMENT_NAME)
     }
 
     previewHandler() {

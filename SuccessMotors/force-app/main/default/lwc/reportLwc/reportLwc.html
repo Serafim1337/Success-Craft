@@ -1,0 +1,35 @@
+<template>
+
+  <template if:true={view}>
+
+  <lightning-card>
+    <p>record</p>
+  </lightning-card>
+
+</template>
+
+<template if:false={view}>
+
+  <lightning-card>
+ 
+
+<lightning-accordion>
+  <template for:each={accounts.data} for:item="acc">
+      <lightning-accordion-section key={acc.Id} label={acc.Name}>
+        <h2 style="font-size: 18px; font-weight:700;">Closed Opportunities:</h2>
+
+       <template for:each={acc.Opportunities} for:item="p">
+        
+         <p key={p.Id}>{p.Name} = <span class="amount">{p.Amount}</span></p>
+
+       </template>
+
+       <p onload={handleSumAmount} class="sum">Sum</p>
+
+      </lightning-accordion-section>
+  </template>
+</lightning-accordion>
+
+</lightning-card>
+</template>
+</template>

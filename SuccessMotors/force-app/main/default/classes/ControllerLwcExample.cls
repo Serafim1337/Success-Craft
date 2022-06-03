@@ -1,12 +1,31 @@
 public with sharing class ControllerLwcExample {
     @AuraEnabled(cacheable=true)
-    public static void sendEmailToController(String body, String toSend, String subject){
+    public static void sendEmailToController(String body, String toSend, String subject, String fileName, String oppId){
         try{
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             String[] toAddresses = new String[] {toSend};
             mail.setToAddresses(toAddresses);
             mail.setSubject(subject);
             mail.setHtmlBody('<h1>'+ body + '</h1>');
+            
+            OrgWideEmailAddress owea = [SELECT 
+            Id,Address 
+            FROM OrgWideEmailAddress
+            WHERE DisplayName = 'New email'];
+            mail.setOrgWideEmailAddressId(owea.Id);
+
+            PageReference pdfPage = Page.InvoicePdf;
+            Blob pdfBlob;
+            pdfPage.getParameters().put('Id', oppId);
+            pdfBlob = pdfPage.getContent();
+
+            Messaging.EmailFileAttachment attachment = new Messaging.EmailFileAttachment();
+            attachment.setContentType('application/pdf');
+            attachment.setFileName(fileName+'.pdf');
+            attachment.setInline(false);
+            attachment.setBody(pdfBlob);
+
+            mail.setFileAttachments(new Messaging.EmailFileAttachment[]{ attachment });
         
             Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
         }catch(Exception ex){
@@ -25,10 +44,6 @@ public with sharing class ControllerLwcExample {
 
     @AuraEnabled(cacheable=true)
     public static Contact getContactData(String oppId) {
-        // OpportunityContactRole cr = [SELECT Contact.Name, Contact.Email 
-        // FROM OpportunityContactRole 
-        // WHERE OpportunityId=:oppId];
-        // return cr;
 
         OpportunityContactRole cr = [SELECT ContactId
         FROM OpportunityContactRole
@@ -40,6 +55,13 @@ public with sharing class ControllerLwcExample {
 
         return cont;
     } 
+
+    @AuraEnabled(cacheable=true)
+    public static Attachment getAttachment(String oppId) {
+        return [SELECT Name
+        FROM Attachment
+        WHERE ParentId=:oppId];
+    }
 
     
 }
