@@ -23,8 +23,10 @@ global class InboundEmailHandler implements Messaging.InboundEmailHandler {
                 };
 
                 if(email.plainTextBody.toLowerCase().contains('approved')) {
+                        if(opp.StageName != 'Closed Won') {
                       Integer pos =  stages.indexOf(opp.StageName);
                       opp.StageName = stages.get(pos+1);
+                        }
                 } else if(email.plainTextBody.toLowerCase().contains('rejected')){
                         opp.StageName = 'Closed Lost';
                 }
