@@ -47,7 +47,7 @@ public with sharing class ControllerLwcExample {
 
         OpportunityContactRole cr = [SELECT ContactId
         FROM OpportunityContactRole
-        WHERE OpportunityId=:oppId];
+        WHERE OpportunityId=:oppId AND IsPrimary=true];
 
         Contact cont = [SELECT Name, Email
         FROM Contact

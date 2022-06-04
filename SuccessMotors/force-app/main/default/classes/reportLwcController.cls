@@ -62,13 +62,6 @@ public with sharing class reportLwcController {
 
         }
 
-        // searchTerm = '%' + searchTerm + '%';
-
-        // return [SELECT Name, (SELECT Id, Name, Amount, CreatedDate, CloseDate FROM Opportunities WHERE IsClosed=TRUE AND IsWon=TRUE)      
-        // FROM Account
-        // WHERE Name Like :searchTerm
-        // WITH SECURITY_ENFORCED];
-
         List<Account> accountsToSearch = mapAccountToOpportunities();
         List<Account> accountsToReturn = new List<Account>();
 
@@ -87,5 +80,17 @@ public with sharing class reportLwcController {
         }
 
         return accountsToReturn;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Account getSingleAccount(String accountId) {
+        List<Account> accountsToSearch = mapAccountToOpportunities();
+        Account accountToReturn;
+        for(Account a : accountsToSearch) {
+            if((String)a.Id == accountId) {
+                accountToReturn = a;
+            }
+        }
+        return accountToReturn;
     }
 }

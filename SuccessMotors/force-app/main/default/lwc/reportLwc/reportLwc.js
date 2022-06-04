@@ -2,8 +2,13 @@ import { LightningElement, api,wire} from 'lwc';
 
 import getAccounts from '@salesforce/apex/reportLwcController.getAccounts';
 import searchAccounts from '@salesforce/apex/reportLwcController.searchAccounts';
+import getSingleAccount from '@salesforce/apex/reportLwcController.getSingleAccount';
 
 export default class ReportLwc extends LightningElement {
+  @api recordId
+
+  @wire(getSingleAccount, {accountId: '$recordId'}) singleAccount
+
   @api view
 
   accounts
@@ -31,37 +36,6 @@ export default class ReportLwc extends LightningElement {
 		}, 300);
     
   }
-
-
-
-  renderedCallback() {
-
-
-    // let oppsBlocks = this.template.querySelectorAll('.opps-block');
-
-    // for(let ob of oppsBlocks) {
-    //   if(ob.children.length > 0) {
-
-    //     let amountElements = ob.children;
-    //     let sum = 0;
-
-    //     for(let elem of amountElements) {
-          
-    //       let amounts = elem.textContent.substring(elem.textContent.indexOf('=')+1);
-    //       sum+= parseInt(amounts);
-
-    //       }
-
-          
-
-    //       ob.lastElementChild.textContent = 'Sum= ' + sum;
-
-    //     }
-
-    //   } 
-
-
-    }
 
     linksHandler(event) {
       let id = event.target.dataset.targetId;
