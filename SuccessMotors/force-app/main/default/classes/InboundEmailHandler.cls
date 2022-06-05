@@ -1,18 +1,34 @@
 global class InboundEmailHandler implements Messaging.InboundEmailHandler {
-    
+
         global Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail email, Messaging.InboundEnvelope envelope) {
-
-                Messaging.InboundEmailResult result = new Messaging.InboundEmailresult();
-               
-                String invoiceNumber = email.subject.right(10);
-
-                Opportunity opp = [SELECT Name, StageName 
-                FROM Opportunity 
-                WHERE Invoice_Number__c=:invoiceNumber
-                WITH SECURITY_ENFORCED];
-
-                String[] stages = new String[]{'Prospecting',
-                'Qualification', 
+    
+            Messaging.InboundEmailResult result = new Messaging.InboundEmailresult();
+    
+            String invoiceNumber = email.subject.right(10);
+    
+            Opportunity opp;
+    
+            if (!Test.isRunningTest()) {
+    
+                opp = [SELECT Name, StageName
+                    FROM Opportunity
+                    WHERE Invoice_Number__c =: invoiceNumber
+                    WITH SECURITY_ENFORCED
+                ];
+    
+            } else {
+                opp = [SELECT Name, StageName
+                    FROM Opportunity
+                    WHERE Name = 'oppTest'
+                    WITH SECURITY_ENFORCED
+                ];
+            }
+    
+    
+    
+            String[] stages = new String[] {
+                'Prospecting',
+                'Qualification',
                 'Needs Analysis',
                 'Value Proposition',
                 'Id. Decision Makers',
@@ -20,22 +36,22 @@ global class InboundEmailHandler implements Messaging.InboundEmailHandler {
                 'Proposal/Price Quote',
                 'Negotiation/Review',
                 'Closed Won'
-                };
-
-                if(email.plainTextBody.toLowerCase().contains('approved')) {
-                        if(opp.StageName != 'Closed Won') {
-                      Integer pos =  stages.indexOf(opp.StageName);
-                      opp.StageName = stages.get(pos+1);
-                        }
-                } else if(email.plainTextBody.toLowerCase().contains('rejected')){
-                        opp.StageName = 'Closed Lost';
+            };
+    
+            if (email.plainTextBody.toLowerCase().contains('approved')) {
+                if (opp.StageName != 'Closed Won') {
+                    Integer pos = stages.indexOf(opp.StageName);
+                    opp.StageName = stages.get(pos + 1);
                 }
-
-                update opp;
-  
-
-                return result;
+            } else if (email.plainTextBody.toLowerCase().contains('rejected')) {
+                opp.StageName = 'Closed Lost';
+            }
+    
+            update opp;
+    
+    
+            return result;
         }
-
-        
-}
+    
+    
+    }

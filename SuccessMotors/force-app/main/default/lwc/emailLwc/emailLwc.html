@@ -1,43 +1,42 @@
 <template>
-    <lightning-quick-action-panel header="Send invoice">
+   <lightning-quick-action-panel header="Send invoice">
        <label>
-          <h2 style="font-size: 18px; font-weight:900;">Email subject:</h2>
-          <p>{templateSubject} {invoiceNumber}</p>
+           <h2 style="font-size: 18px; font-weight:900;">Email subject:</h2>
+           <p>{templateSubject} {invoiceNumber}</p>
        </label>
        <label>
-          <h2 style="font-size: 18px; font-weight:900;">Contact Name:</h2>
-          <template if:true={contactName}>
-             <p>{contactName}</p>
-          </template>
-          <template if:false={contactName}>
-             <p>No contact name</p>
-          </template>
+           <h2 style="font-size: 18px; font-weight:900;">Contact Name:</h2>
+           <template if:true={contactName}>
+               <p>{contactName}</p>
+           </template>
+           <template if:false={contactName}>
+               <p>No contact name</p>
+           </template>
        </label>
        <label>
-          <h2 style="font-size: 18px; font-weight:900;">Contact Email:</h2>
-          <template if:true={contactEmail}>
-             <p>{contactEmail}</p>
-          </template>
-          <template if:false={contactEmail}>
-             <p>No contact email</p>
-          </template>
+           <h2 style="font-size: 18px; font-weight:900;">Contact Email:</h2>
+           <template if:true={contactEmail}>
+               <p>{contactEmail}</p>
+           </template>
+           <template if:false={contactEmail}>
+               <p>No contact email</p>
+           </template>
        </label>
        <label>
-          <h2 style="font-size: 18px; font-weight:900;">Email text:</h2>
-          <lightning-input-rich-text value={templateBody} onchange={handleBodyChange}></lightning-input-rich-text>
+           <h2 style="font-size: 18px; font-weight:900;">Email text:</h2>
+           <lightning-input-rich-text value={templateBody} onchange={handleBodyChange}></lightning-input-rich-text>
        </label>
        <label>
-          <h2 style="font-size: 18px; font-weight:900;">Attachment:</h2>
-          <template if:true={attachmentName}>
-             <p>{attachmentName}</p>
-          </template>
-          <template if:false={attachmentName}>
-             <p>No existing attachment</p>
-             <p>Invoice will be generated automatically</p>
-          </template>
+           <h2 style="font-size: 18px; font-weight:900;">Attachment:</h2>
+           <template if:true={attachmentName}>
+               <p>{attachmentName}</p>
+           </template>
+           <template if:false={attachmentName}>
+               <p>No existing attachment</p>
+               <p>Invoice will be generated automatically</p>
+           </template>
        </label>
-       <lightning-button onclick={sendEmailAfterEvent}
-          label="Send Invoice"></lightning-button>
+       <lightning-button onclick={sendEmailAfterEvent} label="Send Invoice"></lightning-button>
        <lightning-button label="Preview Invoice" onclick={previewHandler}></lightning-button>
-    </lightning-quick-action-panel>
- </template>
+   </lightning-quick-action-panel>
+</template>

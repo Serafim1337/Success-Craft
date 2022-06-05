@@ -1,6 +1,4 @@
 <apex:page renderAs="PDF" controller="InvoicePdfController" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" showHeader="false">
-   <!-- {!$CurrentPage.parameters.id} -->
-   <!-- &id=0065j00000a32YHAAY -->
    <html>
       <head>
          <style>
@@ -135,7 +133,7 @@
             <div class="container">
                <div class="org-info">
                   <ul class="org-info-list">
-                     <li>        <img class="logo" src="https://successcraft56-dev-ed--c.visualforce.com/resource/1653859174000/Logo?"/></li>
+                     <li><img class="logo" src="https://successcraft56-dev-ed--c.visualforce.com/resource/1653859174000/Logo?"/></li>
                      <li>{!myOrg.Country}</li>
                      <li>{!myOrg.State}</li>
                      <li>{!myOrg.City}</li>
