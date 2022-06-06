@@ -41,6 +41,16 @@ public with sharing class reportLwcController {
     }
 
     @AuraEnabled(cacheable = true)
+    public static List<OpportunityLineItem> getProducts(String oppId) {
+        List<OpportunityLineItem> products = [SELECT Id, PricebookEntry.Name, Quantity, ListPrice, TotalPrice
+        FROM OpportunityLineItem
+        WHERE OpportunityId=:oppId];
+
+
+        return products;
+    }
+
+    @AuraEnabled(cacheable = true)
     public static List < Account > getAccounts() {
 
         return mapAccountToOpportunities();

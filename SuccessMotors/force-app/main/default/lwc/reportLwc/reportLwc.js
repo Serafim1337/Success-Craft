@@ -1,12 +1,14 @@
 import {
   LightningElement,
   api,
-  wire
+  wire,
+  track
 } from 'lwc';
 
 import getAccounts from '@salesforce/apex/reportLwcController.getAccounts';
 import searchAccounts from '@salesforce/apex/reportLwcController.searchAccounts';
 import getSingleAccount from '@salesforce/apex/reportLwcController.getSingleAccount';
+import getProducts from '@salesforce/apex/reportLwcController.getProducts';
 
 export default class ReportLwc extends LightningElement {
   @api recordId
@@ -26,6 +28,37 @@ export default class ReportLwc extends LightningElement {
   updateAccountHandler(event) {
       this.visibleAccounts = [...event.detail.records];
   }
+
+  renderedCallback() {
+      let accordions = this.template.querySelectorAll('.accordion-section');
+      for(let a of accordions) {
+        let name = a.dataset.name;
+        let sum = a.dataset.sum || ' ';
+  
+        a.label=`${name} : ${sum}`;
+      }
+  }
+
+   columns = [
+    { label: 'Name', fieldName: 'Name' },
+    { label: 'Amount', fieldName: 'Amount', type: 'currency' },
+    { label: 'Created Date', fieldName: 'CreatedDate', type: 'date' },
+    { label: 'Close Date', fieldName: 'CloseDate', type: 'date' },
+];
+
+@track openModal = false;
+
+@api oppId
+
+@wire(getProducts, {oppId: '$oppId'}) products
+
+    showModal(event) {
+        this.openModal = true;
+        this.oppId = event.target.dataset.oppId;
+    }
+    closeModal() {
+        this.openModal = false;
+    }
 
   @api searchTerm = ''
 

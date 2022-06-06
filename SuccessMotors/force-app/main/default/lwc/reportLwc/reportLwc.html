@@ -60,44 +60,54 @@
 
           <lightning-accordion>
               <template for:each={visibleAccounts} for:item="acc">
-                  <lightning-accordion-section key={acc.Id} label={acc.Name}>
+                  <lightning-accordion-section key={acc.Id} 
+                  data-name={acc.Name} 
+                  data-sum={acc.Closed_Opportunities_Sum__c} 
+                  class="accordion-section">
 
                       <h2 style="font-size: 18px; font-weight:700;" if:true={acc.Opportunities}>Closed Opportunities: </h2>
                       <h2 style="font-size: 18px; font-weight:700;" if:false={acc.Opportunities}>No Closed Opportunities</h2>
 
+                    
+
                       <div class="opps-with-buttons" style="display: flex; gap:20px;">
 
-                          <div class="opps-block">
+                          <div class="opps-block" if:true={acc.Opportunities}>
+                              <table style="border-collapse: collapse;">
+                                  <thead>
+                                      <tr style="border: 1px solid #000000;">
+                                          <th style="border: 1px solid #000000; padding:10px;">Name</th>
+                                          <th style="border: 1px solid #000000; padding:10px;">Amount</th>
+                                          <th style="border: 1px solid #000000; padding:10px;">Created Date</th>
+                                          <th style="border: 1px solid #000000; padding:10px;">Close Date</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      
                               <template for:each={acc.Opportunities} for:item="p">
 
-                                  <a key={p.Id} style="display: block; margin-top:20px;" data-target-id={p.Id} class="opp-link" onclick={linksHandler}>
-                                      {p.Name} = <span class="amount">{p.Amount}</span>
-                                  </a>
+                                  
+                                  <tr key={p.Id} style="border: 1px solid #000000; padding:10px;">
+
+                                  <td key={p.Id} style="border: 1px solid #000000; padding:10px;"><a data-target-id={p.Id} class="opp-link" onclick={linksHandler}>{p.Name}</a></td>
+                                  <td key={p.Id} style="border: 1px solid #000000; padding:10px;">{p.Amount}</td>
+                                  <td key={p.Id} style="border: 1px solid #000000; padding:10px;"><lightning-formatted-date-time value={p.CreatedDate}></lightning-formatted-date-time></td>
+                                  <td key={p.Id} style="border: 1px solid #000000; padding:10px;"><lightning-formatted-date-time value={p.CloseDate}></lightning-formatted-date-time></td>
+                                  <td style="padding:10px;"><lightning-button label="Products" onclick={showModal} key={p.Id} data-opp-id={p.Id}></lightning-button> </td>
+                                </tr>
+
+                                
 
                               </template>
-
-                              <p class="sum" style="font-weight: 700; margin-top:20px;" if:true={acc.Closed_Opportunities_Sum__c}>Sum = {acc.Closed_Opportunities_Sum__c}</p>
+                            
+                            </tbody>
+                            </table>
                           </div>
 
-                          <div class="buttons-block" style="display: flex; flex-direction:column;">
-                              <template for:each={acc.Opportunities} for:item="p">
-                                  <lightning-button key={p.Id} label="Products" style="margin-top: 10px;" data-button-id={p.Id} onclick={buttonsHandler}>
-                                  </lightning-button>
-                              </template>
-                          </div>
+                          
                       </div>
 
-                      <p style="margin-top: 20px;" if:true={acc.Opportunities}>Created/Closed dates:</p>
-                      <template for:each={acc.Opportunities} for:item="p">
-                          <p key={p.Id} style="margin-top: 10xp;">{p.Name}(
-                              <lightning-formatted-date-time value={p.CreatedDate}>
-
-                              </lightning-formatted-date-time>/
-                              <lightning-formatted-date-time value={p.CloseDate}>
-
-                              </lightning-formatted-date-time>)
-                          </p>
-                      </template>
+                     
 
                   </lightning-accordion-section>
               </template>
@@ -107,4 +117,51 @@
           </div>
       </lightning-card>
   </template>
+
+  <template if:true={openModal}>  
+    <div class="slds-modal slds-fade-in-open slds-backdrop">  
+      <div class="slds-modal__container">  
+        
+        <div class="slds-modal__header">  
+          <lightning-button-icon icon-name="utility:close" alternative-text="Close this window" size="large"  
+            variant="bare-inverse" onclick={closeModal} class="slds-modal__close">  
+          </lightning-button-icon>  
+          <h2 style="font-size: 20px; font-weight:700;">Opportunity Products</h2>  
+        </div>  
+       
+        <div class="slds-modal__content slds-p-around_medium">  
+          <center> 
+              <table style="border-collapse: collapse;">
+                  <thead>
+                        <tr style="border: 1px solid #000000;">
+                            <th style="border: 1px solid #000000; padding:10px;">Product</th>
+                            <th style="border: 1px solid #000000; padding:10px;">Quantity</th>
+                            <th style="border: 1px solid #000000; padding:10px;">Price</th>
+                            <th style="border: 1px solid #000000; padding:10px;">Total</th>
+                        </tr>
+                  </thead>
+                  <tbody>
+                      
+            <template for:each={products.data} for:item="prod">
+                
+                <tr key={prod.Id} style="border: 1px solid #000000; padding:10px;">
+                    <td key={prod.Id} style="border: 1px solid #000000; padding:10px;">{prod.PricebookEntry.Name}</td>
+                    <td key={prod.Id} style="border: 1px solid #000000; padding:10px;">{prod.Quantity}</td>
+                    <td key={prod.Id} style="border: 1px solid #000000; padding:10px;">{prod.ListPrice}</td>
+                    <td key={prod.Id} style="border: 1px solid #000000; padding:10px;">{prod.TotalPrice}</td>
+                </tr>
+            </template>
+        </tbody>
+        </table> 
+          </center>  
+        </div>  
+        
+        <div class="slds-modal__footer">  
+          <lightning-button icon-name="utility:close" label="Close" variant="brand" onclick={closeModal}>  
+          </lightning-button>  
+        </div>  
+      </div>  
+    </div>  
+  </template>  
+
 </template>
