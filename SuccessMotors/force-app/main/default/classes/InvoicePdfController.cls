@@ -40,7 +40,7 @@ public class InvoicePdfController {
         set;
     }
 
-    public String margin {
+    public String tableHeight {
         get;
         set;
     }
@@ -96,7 +96,7 @@ public class InvoicePdfController {
 
         this.balance = priceSum;
 
-        this.margin = productCounter * 50 + 'px';
+        this.tableHeight = productCounter * 70 + 120 + 'px';
     }
 
 }

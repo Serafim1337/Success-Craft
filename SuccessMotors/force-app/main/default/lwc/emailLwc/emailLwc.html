@@ -28,13 +28,7 @@
        </label>
        <label>
            <h2 style="font-size: 18px; font-weight:900;">Attachment:</h2>
-           <template if:true={attachmentName}>
-               <p>{attachmentName}</p>
-           </template>
-           <template if:false={attachmentName}>
-               <p>No existing attachment</p>
-               <p>Invoice will be generated automatically</p>
-           </template>
+           <p>Generated Invoice : {invoiceNumber}</p>
        </label>
        <lightning-button onclick={sendEmailAfterEvent} label="Send Invoice"></lightning-button>
        <lightning-button label="Preview Invoice" onclick={previewHandler}></lightning-button>

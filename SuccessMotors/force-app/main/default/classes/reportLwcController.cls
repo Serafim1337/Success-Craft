@@ -6,10 +6,19 @@ public with sharing class reportLwcController {
 
         if (CACHED_ACCOUNTS == null) {
 
-            List < Account > accounts = [SELECT Name, Closed_Opportunities_Sum__c, (SELECT Id, Name, Amount, CreatedDate, CloseDate FROM Opportunities WHERE IsClosed = TRUE AND IsWon = TRUE)
+            List < Account > accountsNotFiltered = [SELECT Name, Closed_Opportunities_Sum__c, (SELECT Id, Name, Amount, CreatedDate, CloseDate FROM Opportunities WHERE IsClosed = TRUE AND IsWon = TRUE)
                 FROM Account
                 WITH SECURITY_ENFORCED
             ];
+
+            List<Account> accounts = new List<Account>();
+
+            for(Account a : accountsNotFiltered) {
+                List<Opportunity> opp = a.Opportunities;
+                if(opp.size() > 0) {
+                    accounts.add(a);
+                }
+            }
 
             List < AggregateResult > sums = [SELECT AccountId, SUM(Amount)
                 FROM Opportunity

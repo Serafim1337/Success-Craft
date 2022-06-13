@@ -169,7 +169,7 @@
             </ul>
          </div>
          <div class="table">
-            <table class="table-fill">
+            <table class="table-fill" style="height:{!tableHeight}">
                <thead>
                   <tr>
                      <th class="text-left">PRODUCT NAME</th>
@@ -195,14 +195,14 @@
                   </tr>
                </tbody>
             </table>
-            <div class="footer" style="margin-top: {!margin}">
+            <div class="footer">
                <h2>
                   {!myOrg.Name}
                </h2>
             </div>
          </div>
          <script>
-            let tableHeight = document.querySelector('.table').clientHeight;
+            
          </script>
       </body>
    </html>

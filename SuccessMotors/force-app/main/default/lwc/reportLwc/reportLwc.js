@@ -29,6 +29,12 @@ export default class ReportLwc extends LightningElement {
       this.visibleAccounts = [...event.detail.records];
   }
 
+  @track activeSections = [];
+
+  collapseSectionHandler(event) {
+        this.activeSections.push(event.target.dataset.name);
+  }
+
   renderedCallback() {
       let accordions = this.template.querySelectorAll('.accordion-section');
       for(let a of accordions) {

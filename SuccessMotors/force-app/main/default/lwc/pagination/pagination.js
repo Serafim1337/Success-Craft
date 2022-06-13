@@ -8,7 +8,7 @@ export default class Pagination extends LightningElement {
     get records(){
         return this.visibleRecords
     }
-    @api 
+    @api    
     set records(data){
         if(data){ 
             this.totalRecords = data

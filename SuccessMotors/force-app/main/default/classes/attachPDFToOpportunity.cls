@@ -10,21 +10,10 @@ public class attachPDFToOpportunity {
 
 	public PageReference attachPDF() {
 
-			Opportunity currentOpp = [SELECT Invoice_Number__c
+			Opportunity currentOpp = [SELECT Invoice_Number__c,Id
 					FROM Opportunity
 					WHERE Id =: opp.Id
 			];
-
-			String attachQuery = currentOpp.Invoice_Number__c + '.pdf';
-
-			List < Attachment > att = Database.query('SELECT Name FROM Attachment WHERE Name=: attachQuery');
-			if (att.size() > 0) {
-					Attachment attToDelete = [SELECT Name
-							FROM Attachment
-							WHERE Name =: attachQuery
-					];
-					delete attToDelete;
-			}
 
 			PageReference pdfPage = Page.InvoicePdf;
 			Blob pdfBlob;
@@ -34,8 +23,57 @@ public class attachPDFToOpportunity {
 			} else {
 					pdfBlob = Blob.valueOf('Empty pdf');
 			}
-			Attachment attach = new Attachment(parentId = opp.Id, Name = currentOpp.Invoice_Number__c + '.pdf', body = pdfBlob);
-			insert attach;
+
+			String currentId = opp.Id;
+		
+			List<ContentDocumentLink> links = Database.query('Select ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId=: currentId');
+			
+			if(links.size() < 1) {
+
+				ContentVersion cv = new ContentVersion();
+				cv.Title = currentOpp.Invoice_Number__c;
+				cv.PathOnClient = currentOpp.Invoice_Number__c + '.pdf';
+				cv.VersionData = pdfBlob;
+				cv.IsMajorVersion = true;
+	
+				insert cv;
+	
+				Id conDocId = [SELECT ContentDocumentId 
+											FROM ContentVersion 
+											WHERE Id =:cv.Id].ContentDocumentId;
+	
+				ContentDocumentLink cdl = new ContentDocumentLink();
+				cdl.LinkedEntityId = currentOpp.Id;
+				cdl.ContentDocumentId = conDocId;
+				cdl.shareType = 'V';
+	
+				insert cdl;
+
+			} else {
+
+				ContentDocumentLink cdl = [SELECT ContentDocumentId FROM    ContentDocumentLink WHERE LinkedEntityId =: currentId];
+
+        ContentVersion contentVersion = new ContentVersion(
+            ContentDocumentId = cdl.ContentDocumentId,
+            Title = currentOpp.Invoice_Number__c,
+            PathOnClient = currentOpp.Invoice_Number__c + '.pdf',
+            ReasonForChange = 'Document replaced by user',
+            VersionData = pdfBlob,
+            IsMajorVersion = true
+        );
+
+        insert contentVersion;
+				
+			}
+				
+			
+
+			
+
+		
+
+			// Attachment attach = new Attachment(parentId = opp.Id, Name = currentOpp.Invoice_Number__c + '.pdf', body = pdfBlob);
+			// insert attach;
 
 
 			PageReference pageWhereWeWantToGo = new ApexPages.StandardController(opp).view();
