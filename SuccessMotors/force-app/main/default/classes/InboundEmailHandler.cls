@@ -24,8 +24,6 @@ global class InboundEmailHandler implements Messaging.InboundEmailHandler {
                 ];
             }
     
-    
-    
             String[] stages = new String[] {
                 'Prospecting',
                 'Qualification',
@@ -37,8 +35,6 @@ global class InboundEmailHandler implements Messaging.InboundEmailHandler {
                 'Negotiation/Review',
                 'Closed Won'
             };
-
-    
     
             if (email.plainTextBody.toLowerCase().startsWith('approved')) {
                 if (opp.StageName != 'Closed Won') {
@@ -50,7 +46,6 @@ global class InboundEmailHandler implements Messaging.InboundEmailHandler {
             }
     
             update opp;
-    
     
             return result;
         }

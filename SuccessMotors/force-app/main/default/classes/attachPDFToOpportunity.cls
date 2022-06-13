@@ -2,11 +2,9 @@ public class attachPDFToOpportunity {
 
 	private final Opportunity opp;
 
-
 	public attachPDFToOpportunity(ApexPages.StandardController standardPageController) {
 			opp = (Opportunity) standardPageController.getRecord();
 	}
-
 
 	public PageReference attachPDF() {
 
@@ -65,16 +63,6 @@ public class attachPDFToOpportunity {
         insert contentVersion;
 				
 			}
-				
-			
-
-			
-
-		
-
-			// Attachment attach = new Attachment(parentId = opp.Id, Name = currentOpp.Invoice_Number__c + '.pdf', body = pdfBlob);
-			// insert attach;
-
 
 			PageReference pageWhereWeWantToGo = new ApexPages.StandardController(opp).view();
 			pageWhereWeWantToGo.setRedirect(true);
