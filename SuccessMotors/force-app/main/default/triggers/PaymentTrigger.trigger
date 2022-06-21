@@ -15,11 +15,12 @@ trigger PaymentTrigger on Payment__c (after insert) {
   FROM Payment__c 
   WHERE Opportunity__c IN:oppsIds];
 
-  List<Opportunity> oppsToCheck = [SELECT Id, Name, Amount 
+  List<Opportunity> oppsToCheck = [SELECT Id, Name, Amount, CreatedById 
   FROM Opportunity
   WHERE Id IN:oppsIds];
 
   List<Opportunity> oppsToUpdate = new List<Opportunity>();
+  List<Opportunity> oppsToSetTask = new List<Opportunity>();
 
   for(Opportunity opp : oppsToCheck) {
     Decimal oppAmount = 0;
@@ -35,11 +36,14 @@ trigger PaymentTrigger on Payment__c (after insert) {
       opp.StageName = 'Partially Paid';
     } else {
       opp.StageName = 'Fully Paid';
+      oppsToSetTask.add(opp);
     }
 
     oppsToUpdate.add(opp);
 
   }
+
+  PaymentTriggerController.createTask(oppsToSetTask);
 
   update oppsToUpdate;
 }

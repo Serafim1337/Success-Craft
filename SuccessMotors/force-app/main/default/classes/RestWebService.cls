@@ -69,5 +69,5 @@ global with sharing class RestWebService {
 //     "client_id":"3MVG9pRzvMkjMb6mNS34mqMWBE0wqx9VEfyHcNAR8g1Qe9IYer5XMjy12QXsRp42raZSffMOdhP1pNjxpiuaw",
 //     "client_secret":"A7005D64968C6B8E341CFF50799F56D87752BF1146C8142B6C12EF1BC0246DDE",
 //     "username":"serafimevt@success-craft.com",
-//     "password":"7777920plamen"
+//     "password":"7777920Plamen"
 //     }
