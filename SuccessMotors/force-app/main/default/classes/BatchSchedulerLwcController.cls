@@ -1,11 +1,13 @@
 public with sharing class BatchSchedulerLwcController {
 
     @AuraEnabled
-    public static void scheduleBatch(String cronString, String batchName, String schedulerName){
-            ScheduleContactsBatch m = new ScheduleContactsBatch();
+    public static void scheduleBatch(String cronString, String batchName, String schedulerName, String jobName){
+
+            Type dynamicApexType = Type.forName(schedulerName);
+            Schedulable schedulerInstance = (Schedulable) dynamicApexType.newInstance();
             
             String sch = cronString;
-            String jobID = system.schedule('ScheduleJob', sch, m);      
+            String jobID = system.schedule(jobName, sch, schedulerInstance);      
     }
 
     @AuraEnabled
@@ -17,7 +19,12 @@ public with sharing class BatchSchedulerLwcController {
 
     @AuraEnabled
     public static void runBatch(String batchName) {
-        Id batchId = Database.executeBatch(new ContactsBatch());
+
+        Type dynamicApexType = Type.forName(batchName);
+
+        Database.Batchable<SObject> batchInstance = (Database.Batchable<SObject>) dynamicApexType.newInstance();
+
+        Id batchId = Database.executeBatch(batchInstance);
     }
 
 }

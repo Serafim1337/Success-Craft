@@ -8,14 +8,14 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class BatchSchedulerLwc extends LightningElement {
 
+  //!---Settings
   batchName = 'ContactsBatch';
   schedulerName = 'ScheduleContactsBatch';
   jobName = 'ScheduleJob'
-  
+  //!---Settings
 
   @track view = true;
 
-  jobId;
 
   handleRunButton(e){
 
@@ -40,7 +40,8 @@ export default class BatchSchedulerLwc extends LightningElement {
 
       scheduleBatch({cronString: this.template.querySelector('.input').value,
       batchName: this.batchName,
-      schedulerName: this.schedulerName
+      schedulerName: this.schedulerName,
+      jobName: this.jobName
       }).then(()=>{
        
         const event = new ShowToastEvent({

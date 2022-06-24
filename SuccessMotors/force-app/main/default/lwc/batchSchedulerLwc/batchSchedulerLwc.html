@@ -1,10 +1,10 @@
 <template>
     <lightning-card>
-      <h1>Batch Scheduler</h1>
+      <h1 style="font-size: 24px; font-weight:700; text-align:center">Batch Scheduler</h1>
 
-      <lightning-input placeholder="Type your schedule" label="CRON String" value="0 35 17 * * ?" class="input"></lightning-input>
+      <lightning-input placeholder="Type your schedule" label="CRON String" value="0 0 13 * * ?" class="input"></lightning-input>
 
-      <lightning-button-group>
+      <lightning-button-group style="margin-top: 20px;">
       <lightning-button onclick={handleRunButton} label="Run Once"></lightning-button>
       <lightning-button onclick={handleScheduleButton} label="Schedule batch" if:true={view}></lightning-button>
       <lightning-button onclick={handleAbortButton} label="Abort batch" if:false={view}></lightning-button>
