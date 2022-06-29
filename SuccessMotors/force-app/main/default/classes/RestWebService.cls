@@ -34,7 +34,6 @@ global with sharing class RestWebService {
 }
 
 
-
 // Requests examples
 
 // post https://successcraft56-dev-ed.lightning.force.com/services/apexrest/Payment

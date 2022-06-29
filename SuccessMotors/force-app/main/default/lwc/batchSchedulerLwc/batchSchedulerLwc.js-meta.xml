@@ -4,5 +4,13 @@
     <isExposed>true</isExposed>
     <targets>
         <target>lightning__Tab</target>
+        <target>lightning__HomePage</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__HomePage">
+            <property name="batchName" label="Batch Name" type="String" required="true"/>
+            <property name="schedulerName" label="Scheduler Name" type="String" required="true"/>
+            <property name="jobName" label="Job Name" type="String" required="true"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

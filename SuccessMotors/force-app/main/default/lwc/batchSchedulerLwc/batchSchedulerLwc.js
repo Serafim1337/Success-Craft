@@ -9,12 +9,18 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class BatchSchedulerLwc extends LightningElement {
 
   //!---Settings
-  batchName = 'ContactsBatch';
-  schedulerName = 'ScheduleContactsBatch';
-  jobName = 'ScheduleJob'
+  @api batchName;
+  @api schedulerName;
+  @api jobName;
   //!---Settings
 
   @track view = true;
+
+  @track inputValue = '0 0 12 * * ?';
+
+  handleInputFieldChange(e) {
+    this.inputValue = e.target.value.trim();
+  }
 
 
   handleRunButton(e){
@@ -38,7 +44,7 @@ export default class BatchSchedulerLwc extends LightningElement {
 
   handleScheduleButton(e) {
 
-      scheduleBatch({cronString: this.template.querySelector('.input').value,
+      scheduleBatch({cronString: this.inputValue,
       batchName: this.batchName,
       schedulerName: this.schedulerName,
       jobName: this.jobName
@@ -57,6 +63,9 @@ export default class BatchSchedulerLwc extends LightningElement {
       });
       
       this.view = !this.view;
+
+      this.template.querySelector('.input').disabled = true;
+      
   }
 
   handleAbortButton(e) {
@@ -76,5 +85,7 @@ export default class BatchSchedulerLwc extends LightningElement {
     });
 
     this.view = !this.view;
+
+    this.template.querySelector('.input').disabled = false;
   }
 }

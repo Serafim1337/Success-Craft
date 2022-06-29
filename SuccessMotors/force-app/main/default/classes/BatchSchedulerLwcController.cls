@@ -5,8 +5,9 @@ public with sharing class BatchSchedulerLwcController {
 
             Type dynamicApexType = Type.forName(schedulerName);
             Schedulable schedulerInstance = (Schedulable) dynamicApexType.newInstance();
-            
+           
             String sch = cronString;
+            
             String jobID = system.schedule(jobName, sch, schedulerInstance);      
     }
 
