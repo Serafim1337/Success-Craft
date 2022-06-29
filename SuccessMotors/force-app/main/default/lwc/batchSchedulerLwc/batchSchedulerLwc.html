@@ -14,7 +14,7 @@
          
           <p><lightning-formatted-url value="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_scheduler.htm" label="Read more about scheduling" target="_blank"></lightning-formatted-url></p>
 
-          <div class="button-group slds-float_right" style="margin-right: 20px;">
+          <div class="button-group slds-float_right">
               <button onclick={handleRunButton} class="slds-button slds-button_brand" style="margin-right: 10px;">Run Once</button>
               <button onclick={handleScheduleButton} class="slds-button slds-button_brand" if:true={view}>Schedule batch</button>
               <button onclick={handleAbortButton} class="slds-button slds-button_destructive" if:false={view}>Abort batch</button>
